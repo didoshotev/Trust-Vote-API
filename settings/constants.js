@@ -1,4 +1,10 @@
-const DB_NAME = 'TrustVote-db'
+const DB_NAME = 'TrustVote'
 const DB_POLL_OPTIONS_COLLECTION = 'options'
 
-module.exports = { DB_NAME, DB_POLL_OPTIONS_COLLECTION }
+const PLAN_TYPES = {
+    FREE: 'free',
+    STANDARD: 'standard',
+    PRO: 'pro',
+}
+
+module.exports = { DB_NAME, DB_POLL_OPTIONS_COLLECTION, PLAN_TYPES }
