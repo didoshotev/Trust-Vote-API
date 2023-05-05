@@ -1,26 +1,38 @@
-const mongoose = require('mongoose')
-const { PLAN_TYPES } = require('../settings/constants')
+const { DataTypes } = require('sequelize')
+const { sequelize } = require('../settings/db')
+const { PLAN_TYPES, DB_USERS_TABLE } = require('../settings/constants')
 
-const userSchema = new mongoose.Schema({
-    email: {
-        type: String,
-        trim: true,
-        unique: true,
-        match: [/.+\@.+\..+/, 'Please fill a valid email address'],
-        required: 'Email address is required',
+const User = sequelize.define(
+    'user',
+    {
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+            validate: {
+                isEmail: true,
+            },
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        plan: {
+            type: DataTypes.ENUM(
+                PLAN_TYPES.FREE,
+                PLAN_TYPES.STANDARD,
+                PLAN_TYPES.PRO
+            ),
+            allowNull: false,
+            defaultValue: 'free',
+        },
     },
-    password: {
-        type: String,
-        trim: true,
-        required: true,
-    },
-    plan: {
-        type: String,
-        required: true,
-        default: PLAN_TYPES.FREE,
-    },
-})
+    {
+        timestamps: false, 
+        tableName: DB_USERS_TABLE,
+    }
+)
 
-const User = mongoose.model('User', userSchema)
+User.sync().then(() => console.log('User Model synced'))
 
 module.exports = User

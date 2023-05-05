@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator')
 const { validateSignupParams } = require('../utils/auth')
+const { PLAN_TYPES } = require('../settings/constants')
 
 const JWT_SECRET = process.env.JWT_SECRET || 'devsecret'
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h'
@@ -15,7 +16,6 @@ const REFRESH_TOKEN_EXPIRES_IN = process.env.REFRESH_TOKEN_EXPIRES_IN || '1d'
 
 router.post('/signup', validateSignupParams, async (req, res) => {
     const errors = validationResult(req)
-    console.log('errors: ', errors)
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() })
     }
@@ -24,7 +24,11 @@ router.post('/signup', validateSignupParams, async (req, res) => {
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10)
-        const user = await User.create({ email, password: hashedPassword })
+        const user = await User.create({
+            email,
+            password: hashedPassword,
+            plan: PLAN_TYPES.FREE,
+        })
 
         const accessToken = jwt.sign({ id: user.id }, JWT_SECRET, {
             expiresIn: JWT_EXPIRES_IN,
@@ -82,7 +86,12 @@ router.post('/refresh_token', async (req, res) => {
         const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET)
         const userId = decoded.id
 
-        const user = await User.findById(userId)
+        const user = await User.findOne({
+            where: {
+                id: userId
+            }
+        })
+
         if (!user) {
             return res.status(401).json({ message: 'Invalid refresh token' })
         }
@@ -93,6 +102,7 @@ router.post('/refresh_token', async (req, res) => {
 
         res.json({ accessToken })
     } catch (err) {
+        console.log('error: ', err)
         return res.status(401).json({ message: 'Invalid refresh token' })
     }
 })
