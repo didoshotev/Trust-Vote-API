@@ -4,7 +4,7 @@ const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator')
-const { validateSignupParams } = require('../utils/auth')
+const { validateSignupParams } = require('../utils/middlewares/auth')
 const { PLAN_TYPES } = require('../settings/constants')
 
 const JWT_SECRET = process.env.JWT_SECRET || 'devsecret'
@@ -44,11 +44,15 @@ router.post('/signup', validateSignupParams, async (req, res) => {
     }
 })
 
-router.post('/login', async (req, res) => {
+router.post('/login', validateSignupParams, async (req, res) => {
     const { email, password } = req.body
 
     try {
-        const user = await User.findOne({ email })
+        const user = await User.findOne({
+            where: {
+                email
+            }
+        })
         if (!user) {
             return res
                 .status(401)
@@ -106,5 +110,10 @@ router.post('/refresh_token', async (req, res) => {
         return res.status(401).json({ message: 'Invalid refresh token' })
     }
 })
+
+router.get('/ping', (req, res) => {
+    console.log('PING WORKS...')
+    res.status(200).send('pong');
+});
 
 module.exports = router

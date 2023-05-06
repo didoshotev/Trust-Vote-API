@@ -13,13 +13,14 @@ app.use(cors())
 app.use(express.json())
 app.use(userRoutes)
 
-const PORT = process.env.PORT_DEV
+const PORT = process.env.PORT_DEV || 8080
+const HOST = process.env.HOST || '0.0.0.0'
 
 async function startServer() {
     try {
         await connectToDatabase()
-        app.listen(PORT, () => {
-            console.log(`Listening at http://localhost:${PORT}`)
+        app.listen(PORT, HOST, () => {
+            console.log(`Listening at http://${HOST}:${PORT}`)
         })
     } catch (err) {
         console.log(err)

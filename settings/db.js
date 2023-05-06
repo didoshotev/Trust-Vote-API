@@ -1,8 +1,8 @@
 const { Sequelize } = require('sequelize')
 
-const sequelize = new Sequelize(
-    `postgres://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@localhost:${process.env.DB_PORT}/${process.env.DB_NAME}`
-)
+const uri = `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@db:${process.env.POSTGRES_PORT}/${process.env.POSTGRES_DB}`
+
+const sequelize = new Sequelize(uri)
 
 const connectToDatabase = async () => {
     try {

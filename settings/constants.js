@@ -1,4 +1,4 @@
-const DB_NAME = 'TrustVote'
+const POSTGRES_DB = 'TrustVote'
 const DB_POLL_OPTIONS_COLLECTION = 'options'
 const DB_USERS_TABLE = 'users'
 
@@ -9,7 +9,7 @@ const PLAN_TYPES = {
 }
 
 module.exports = {
-    DB_NAME,
+    POSTGRES_DB,
     DB_POLL_OPTIONS_COLLECTION,
     PLAN_TYPES,
     DB_USERS_TABLE,

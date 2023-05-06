@@ -26,6 +26,6 @@
   },
   "scripts": {
     "format": "yarn --cwd src prettier --write .",
-    "start": "nodemon ./src/index.js localhost"
+    "start": "nodemon --inspect=0.0.0.0:9229 index.js"
   }
 }

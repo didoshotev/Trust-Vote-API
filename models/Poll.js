@@ -1,45 +1,41 @@
-const mongoose = require('mongoose')
+const { DataTypes } = require('sequelize')
+const { sequelize } = require('../settings/db')
 
-const pollSchema = new mongoose.Schema({
+const Poll = sequelize.define('poll', {
     id: {
-        type: Number,
-        required: true,
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        primaryKey: true,
     },
     name: {
-        type: String,
-        required: true,
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     admin: {
-        type: String,
-        required: true,
+        type: DataTypes.STRING,
+        allowNull: false,
+
     },
     startTime: {
-        type: Date,
-        required: true,
+        type: DataTypes.DATE,
+        allowNull: false,
     },
     endTime: {
-        type: Date,
-        required: true,
+        type: DataTypes.DATE,
+        allowNull: false,
     },
     isActive: {
-        type: Boolean,
-        required: true,
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
     },
-    options: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'PollOption',
-        required: true,
-    },
-    votes: {
-        type: Array,
-        required: true,
+    optionsId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
     },
     description: {
-        type: String,
-        required: true,
+        type: DataTypes.STRING,
+        allowNull: true,
     },
-})
+});
 
-const Poll = mongoose.model('Poll', pollSchema)
-
-module.exports = Poll
+module.exports = Poll;
