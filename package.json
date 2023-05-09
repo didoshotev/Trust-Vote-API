@@ -26,6 +26,9 @@
   },
   "scripts": {
     "format": "yarn --cwd src prettier --write .",
-    "start": "nodemon --inspect=0.0.0.0:9229 src/index.js"
+    "start": "nodemon --inspect=0.0.0.0:9229 --watch --legacy-watch src src/index.js",
+    "start:watch": "nodemon -r dotenv/config src/index.js",
+    "docker-start:dev": "docker-compose down || true && docker-compose up --build",
+    "stop": "docker-compose down"
   }
 }

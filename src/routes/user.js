@@ -112,7 +112,7 @@ router.post('/refresh_token', async (req, res) => {
 })
 
 router.get('/ping', (req, res) => {
-    console.log('PING WORKS...')
+    console.log('PING WORKS')
     res.status(200).send('pong');
 });
 

@@ -2,19 +2,19 @@ version: "3"
 
 services:
   db:
-      image: postgres
-      restart: always
-      env_file:
-        - ./.env
-      environment:
-        - POSTGRES_USER=${POSTGRES_USER}
-        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-        - POSTGRES_DB=${POSTGRES_DB}
-        - POSTGRES_PORT=${POSTGRES_PORT}
-      volumes:
-        - db-data:/var/lib/postgresql/data
-      ports:
-        - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    image: postgres
+    restart: always
+    env_file:
+      - ./.env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
   frontend:
     build:
       context: ../frontend
@@ -24,15 +24,17 @@ services:
     depends_on:
       - backend
   backend:
+    restart: always
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     env_file:
-      - ./.env
+      - .env
     environment:
       - NODE_ENV=development
       - DB_HOST=db
-      - DB_PORT=${POSTGRES_PORT}
+      - HOST=0.0.0.0
+      - POSTGRES_PORT=${POSTGRES_PORT}
       - DB_USER=${POSTGRES_USER}
       - DB_PASSWORD=${POSTGRES_PASSWORD}
       - DB_NAME=${POSTGRES_DB}
@@ -41,12 +43,15 @@ services:
       - JWT_EXPIRES_IN=${JWT_EXPIRES_IN}
       - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
       - REFRESH_TOKEN_EXPIRES_IN=${REFRESH_TOKEN_EXPIRES_IN}
-      - HOST=0.0.0.0
+      - CHOKIDAR_USEPOLLING=true
     ports:
       - "${PORT_DEV}:${PORT_DEV}"
     depends_on:
       - db
-
+    volumes:
+      - "./src:/app/src"
+    command: sh -c "npm run start:watch"
 
 volumes:
   db-data:
+
