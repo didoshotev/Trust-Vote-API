@@ -1,20 +1,27 @@
-const mongoose = require('mongoose')
+const { DataTypes } = require('sequelize')
+const { sequelize } = require('../settings/db')
+const Poll = require('./Poll')
 
-const pollOptionSchema = new mongoose.Schema({
-    description: {
-        type: String,
-        required: true,
-    },
-    count: {
-        type: Number,
-        required: true,
-    },
-    name: {
-        type: String,
-        required: true,
-    },
-})
+    const PollOption = sequelize.define('PollOption', {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        description: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        count: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+    });
 
-const PollOption = mongoose.model('PollOption', pollOptionSchema)
+// PollOption.belongsTo(Poll, { as: 'poll', foreignKey: 'poll_id', targetKey: 'id' });
 
-module.exports = PollOption
+module.exports = PollOption;

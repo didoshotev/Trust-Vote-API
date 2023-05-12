@@ -4,6 +4,7 @@ const express = require('express')
 const cors = require('cors')
 
 const userRoutes = require('./routes/user')
+const pollRoutes = require('./routes/poll')
 const { connectToDatabase } = require('./settings/db')
 
 const app = express()
@@ -12,6 +13,7 @@ app.use(cors())
 
 app.use(express.json())
 app.use(userRoutes)
+app.use(pollRoutes)
 
 const PORT = process.env.PORT_DEV || 8080
 const HOST = process.env.HOST || '0.0.0.0'
